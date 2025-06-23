@@ -54,6 +54,7 @@
       margin-top: 15px;
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
       width: 100%;
     }
 
@@ -71,7 +72,7 @@
       color: white;
       border: none;
       border-radius: 6px;
-      margin-left: 10px;
+      margin: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
     }
@@ -94,6 +95,7 @@
   <div id="input-area">
     <input id="input" placeholder="اكتب رسالتك هنا...">
     <button onclick="send()">أرسل</button>
+    <button onclick="clearChat()">🗑️ مسح الكل</button>
   </div>
 
   <footer>تم التطوير بواسطة HAMBIS ©</footer>
@@ -117,6 +119,12 @@
       appendMessage("bot", data.response);
     }
 
+    async function clearChat() {
+      const res = await fetch("/delete", { method: "POST" });
+      const data = await res.json();
+      appendMessage("bot", data.response);
+    }
+
     function appendMessage(sender, text) {
       const chatBox = document.getElementById("chat-box");
       const msgDiv = document.createElement("div");
@@ -128,3 +136,4 @@
   </script>
 </body>
 </html>
+
