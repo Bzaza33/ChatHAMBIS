@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>chatHAMBIS • المساعد الذكي</title>
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #f9f9f9, #e0e0ff);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #4A4A8A;
+      margin-bottom: 10px;
+    }
+
+    #chat-box {
+      width: 90%;
+      max-width: 700px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      height: 500px;
+      overflow-y: auto;
+      direction: rtl;
+    }
+
+    .user, .bot {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 80%;
+    }
+
+    .user {
+      background: #d1e7dd;
+      align-self: flex-end;
+      text-align: right;
+    }
+
+    .bot {
+      background: #f8d7da;
+      align-self: flex-start;
+      text-align: right;
+    }
+
+    #input-area {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    #input {
+      width: 70%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 12px 20px;
+      background-color: #4A4A8A;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #353567;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>🤖 chatHAMBIS</h1>
+  <div id="chat-box"></div>
+
+  <div id="input-area">
+    <input id="input" placeholder="اكتب رسالتك هنا...">
+    <button onclick="send()">أرسل</button>
+  </div>
+
+  <footer>تم التطوير بواسطة HAMBIS ©</footer>
+
+  <script>
+    async function send() {
+      const input = document.getElementById("input");
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      appendMessage("user", msg);
+      input.value = "";
+
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+
+      const data = await res.json();
+      appendMessage("bot", data.response);
+    }
+
+    function appendMessage(sender, text) {
+      const chatBox = document.getElementById("chat-box");
+      const msgDiv = document.createElement("div");
+      msgDiv.className = sender;
+      msgDiv.textContent = sender === "user" ? `🧑‍💻 ${text}` : `🤖 ${text}`;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
